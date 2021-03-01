@@ -15,6 +15,16 @@ input:disabled {
 main {
     display: flex;
     flex-flow: column nowrap;
+    align-items: center;
+}
+
+main > section {
+    margin: 1em;
+    border: 1px solid darkmagenta;
+}
+
+main > section:nth-child(2) {
+    align-self: stretch;
 }
 
 .checkbox-container {
