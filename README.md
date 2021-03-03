@@ -6,7 +6,7 @@ Since most of the exercises only change a single file,
 
 or two, namely App.js and App.css,
 
-the [commit history](https://github.com/banaanihillo/tuni-gui-react/commits/master, "Commit history") should be the most interesting source of information.
+the [commit history](https://github.com/banaanihillo/tuni-gui-react/commits/master "Commit history") should be the most interesting source of information.
 
 The rest of this README file is auto-generated via create-react-app.
 
