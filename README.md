@@ -1,3 +1,15 @@
+# Graphical User Interfaces, University of Tampere
+
+A collection of all the assignments for the course COMP.CS.210.
+
+Since most of the exercises only change a single file,
+
+or two, namely App.js and App.css,
+
+the [commit history](https://github.com/banaanihillo/tuni-gui-react/commits/master, "Commit history") should be the most interesting source of information.
+
+The rest of this README file is auto-generated via create-react-app.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
