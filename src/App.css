@@ -3,9 +3,15 @@ html {
     color: deeppink;
 }
 
-input {
-    background-color: violet;
-    margin: 1em;
+/*
+Make the checkbox "hit area" a bit bigger,
+since not all of the boxes actually have a label,
+due to the layout constraints
+*/
+input[type="checkbox"] {
+    display: block;
+    width: 5em;
+    height: 5em;
 }
 
 input:disabled {
@@ -60,4 +66,8 @@ all the way down to widths of ~300px
     main {
         flex-flow: column nowrap;
     }
+}
+
+.mouse-container {
+    padding: 1em;
 }
