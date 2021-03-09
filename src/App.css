@@ -3,71 +3,13 @@ html {
     color: deeppink;
 }
 
-/*
-Make the checkbox "hit area" a bit bigger,
-since not all of the boxes actually have a label,
-due to the layout constraints
-*/
-input[type="checkbox"] {
-    display: block;
-    width: 5em;
-    height: 5em;
-}
-
-input:disabled {
-    background-color: gray;
-}
-
-main {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-}
-
-main > section {
-    margin: 1em;
+fieldset {
     border: 1px solid darkmagenta;
 }
 
-figcaption {
-    text-align: center;
+input[type="color"] {
+    margin-left: 1em;
+    vertical-align: text-top;
 }
 
-canvas {
-    border: 1px solid cyan;
-    width: 100%;
-    height: 100%;
-}
-
-.mouse-checkbox-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    align-items: center;
-    justify-items: center;
-}
-
-.mouse-information-container {
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: center;
-}
-
-button {
-    background-color: cyan;
-    border: none;
-}
-
-/*
-Stack the checkbox container and the canvas north-to-south,
-to make the user interface usable for smaller screens,
-all the way down to widths of ~300px
-*/
-@media screen and (max-width: 550px) {
-    main {
-        flex-flow: column nowrap;
-    }
-}
-
-.mouse-container {
-    padding: 1em;
-}
+/**/
