@@ -3,14 +3,31 @@ import "./App.css"
 
 const App = () => {
     const [updatedText, setUpdatedText] = useState("")
+    const [selectedShape, setSelectedShape] = useState("")
+
+    const lotsOfNumbers = [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+    ]
+
+    const paintCircle = () => {
+        return <circle
+            cx={25}
+            cy={25}
+            r={20}
+        />
+    }
+
+    const selectShape = (id) => {
+        setSelectedShape(id)
+        let shapeElement = document.getElementById(id)
+        shapeElement.classList.add("selected-shape")
+    }
 
     const showDialog = (dialogType) => {
-        if (dialogType !== "Edit") {
-            window.alert(
-                `${dialogType}
-                Click on Edit to modify the main text.
-                `
-            )
+        if (dialogType === "Add shape") {
+            console.log("Adding a new shape")
+        } else if (dialogType === "Edit shape") {
+            console.log(selectedShape)
         } else {
             setUpdatedText("")
             let dialogElement = document.querySelector("dialog")
@@ -26,7 +43,9 @@ const App = () => {
         }
     }
 
-    const listItems = ["File", "Edit", "Help", "About"]
+    const listItems = [
+        "Add shape", "Edit shape", "Delete shape", "Adjust spacing"
+    ]
 
     const mapListItems = () => {
         return (
@@ -52,7 +71,7 @@ const App = () => {
                 </nav>
             </header>
             <main>
-                <h1> Main heading </h1>
+                
                 <section>
                     <dialog>
                         <header> Update </header>
@@ -85,11 +104,22 @@ const App = () => {
                             </button>
                         </p>
                     </dialog>
-                    <p id="main-text">
-                        {
-                            updatedText
-                            || "Click on Edit to update."
-                        }
+                    <p id="shape-container">
+                        {lotsOfNumbers.map(shape => {
+                            return <svg
+                                width={50}
+                                height={50}
+                                key={`Shape ${shape}`}
+                                id={`shape-${shape}`}
+                                stroke="magenta"
+                                fill="magenta"
+                                onClick={() => {
+                                    selectShape(`shape-${shape}`)
+                                }}
+                            >
+                                {paintCircle()}
+                            </svg>
+                        })}
                     </p>
                 </section>
             </main>

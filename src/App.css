@@ -58,3 +58,17 @@ input,
 button {
     border: 1px solid darkmagenta;
 }
+
+#shape-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+}
+
+#shape-container svg {
+    margin: 0 1em 0 1em;
+}
+
+.selected-shape {
+    outline: 1px solid cyan;
+}
