@@ -3,13 +3,34 @@ html {
     color: deeppink;
 }
 
-fieldset {
-    border: 1px solid darkmagenta;
+nav > ul {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
 }
 
-input[type="color"] {
-    margin-left: 1em;
-    vertical-align: text-top;
+nav > ul > li {
+    list-style: none;
+    cursor: pointer;
+    margin: 0 1em 0 1em;
 }
 
-/**/
+nav > ul > li:hover {
+    background-color: darkmagenta;
+    color: cyan;
+}
+
+header,
+main {
+    border: 1px solid cyan;
+    text-align: center;
+}
+
+dialog {
+    background-color: black;
+    color: deeppink;
+}
+
+dialog > button {
+    background-color: cyan;
+}

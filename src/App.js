@@ -1,73 +1,79 @@
-import React, {useState} from "react"
+import React from "react"
 import "./App.css"
 
 const App = () => {
-    const [color, setColor] = useState("hotpink")
-    const [colorPickerOn, toggleColorPicker] = useState(false)
-
-    const changeColor = (event) => {
-        setColor(event.target.value)
-        toggleColorPicker(false)
+    const showDialog = (dialogType) => {
+        if (dialogType === "Edit") {
+            let mainText = document.querySelector("#main-text")
+            mainText.innerHTML = "Text updated successfully."
+        } else {
+            let dialogElement = document.querySelector("dialog")
+            /*
+            Gecko does not have the dialog element enabled by default,
+            so fall back to an alert element for those user agents
+            */
+            if (typeof dialogElement.showModal === "function") {
+                dialogElement.showModal()
+                let dialogHeader = document.querySelector(
+                    "#dialog-header"
+                )
+                dialogHeader.innerHTML = dialogType
+            } else {
+                window.alert(`${dialogType}
+I am a dialog, sort of
+                `)
+            }
+        }
     }
-    //
+
+    const listItems = ["File", "Edit", "Help", "About"]
+
+    const mapListItems = () => {
+        return (
+            <ul>
+                {listItems.map(item => {
+                    return (
+                        <li key={item} onClick={() => {
+                            showDialog(item)
+                        }}>
+                            {item}
+                        </li>
+                    )
+                })}
+            </ul>
+        )
+    }
+    
     return (
-        <main>
-            <h1 style={{color: color}}> Colo[u]r </h1>
-            <section>
-                <fieldset>
-                    <legend>
-                        Choose a colo[u]r
-                    </legend>
-                    <input
-                        type="radio"
-                        id="primary-color"
-                        value="deeppink"
-                        name="color"
-                        onClick={changeColor}
-                    />
-                    <label htmlFor="primary-color">
-                        Primary colo[u]r
-                    </label>
-                    <br />
-                    <input
-                        type="radio"
-                        id="secondary-color"
-                        value="magenta"
-                        name="color"
-                        onClick={changeColor}
-                    />
-                    <label htmlFor="secondary-color">
-                        Secondary colo[u]r
-                    </label>
-                    <br />
-                    <input
-                        type="radio"
-                        id="custom-color"
-                        name="color"
-                        value="cyan"
-                        onClick={(event) => {
-                            setColor(event.target.value)
-                            toggleColorPicker(true)
-                        }}
-                    />
-                    <label htmlFor="custom-color">
-                        Custom colo[u]r
-                    </label>
-                    {colorPickerOn
-                        &&
-                        <input
-                            type="color"
-                            id="custom-color"
-                            value="#00FFFF"
-                            onInput={(event) => {
-                                setColor(event.target.value)
-                            }}
-                        />
-                    } {/* */}
-                </fieldset>
-            </section>
-            {/* */}
-        </main>
+        <span>
+            <header>
+                <nav>
+                    {mapListItems()}
+                </nav>
+            </header>
+            <main>
+                <h1> Main heading </h1>
+                <section>
+                    <dialog open={false}>
+                        <header id="dialog-header"></header>
+                        <p>
+                            I am a dialog
+                        </p>
+                        <button onClick={() => {
+                            let dialogElement = document.querySelector(
+                                "dialog"
+                            )
+                            dialogElement.close()
+                        }}>
+                            OK
+                        </button>
+                    </dialog>
+                    <p id="main-text">
+                        Click on <em> About </em> to show a dialog.
+                    </p>
+                </section>
+            </main>
+        </span>
     )
 }
 
