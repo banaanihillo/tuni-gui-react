@@ -31,6 +31,30 @@ dialog {
     color: deeppink;
 }
 
-dialog > button {
+dialog button {
     background-color: cyan;
+    width: 3em;
+    margin: 0 auto 0 auto;
+}
+
+dialog header {
+    margin: 0 auto 1em auto;
+    padding: 0.2em;
+    width: 5em;
+}
+
+dialog input {
+    margin: 1em 1em 1em 1em;
+    background-color: violet;
+    width: 50vw;
+}
+
+dialog p {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+input,
+button {
+    border: 1px solid darkmagenta;
 }
