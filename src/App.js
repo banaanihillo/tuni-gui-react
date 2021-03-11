@@ -2,8 +2,7 @@ import React, {useState, useEffect} from "react"
 import "./App.css"
 
 const App = () => {
-    const [updatedColor, setUpdatedColor] = useState("")
-    const [selectedShape, setSelectedShape] = useState("")
+    const [selectedShape, setSelectedShape] = useState(null)
     const [spacing, setSpacing] = useState(16)
 
     useEffect(() => {
@@ -51,10 +50,10 @@ const App = () => {
         }
     }
 
-    const selectShape = (shapeIdentifier) => {
-        let shapeElement = document.getElementById(shapeIdentifier)
-        setSelectedShape(shapeElement)
+    const selectShape = (id) => {
+        let shapeElement = document.getElementById(id)
         shapeElement.classList.add("selected-shape")
+        setSelectedShape(shapeElement)
     }
 
     const commitAction = (actionType) => {
@@ -141,6 +140,16 @@ const App = () => {
             </ul>
         )
     }
+
+    const updateColor = (colorProperty, updatedValue) => {
+        /*
+        Get the shape element via the selected shape identifier,
+        since only partly updating the state would break everything
+        */
+        let shapeElement = document.getElementById(selectedShape.id)
+        shapeElement.setAttribute(colorProperty, updatedValue)
+        setSelectedShape(shapeElement)
+    }
     
     return (
         <span>
@@ -155,15 +164,29 @@ const App = () => {
                     <dialog id="color-dialog">
                         <header> Edit shape </header>
                         <p>
-                            <label htmlFor="updated-color-input">
-                                New color:
+                            <label htmlFor="updated-stroke-input">
+                                Stroke color:
                             </label>
                             <input
                                 type="color"
-                                id="updated-color-input"
-                                value={updatedColor}
+                                id="updated-stroke-input"
                                 onChange={(event) => {
-                                    setUpdatedColor(event.target.value)
+                                    updateColor(
+                                        "stroke",
+                                        event.target.value)
+                                }}
+                            />
+                            <label htmlFor="updated-fill-input">
+                                Fill color:
+                            </label>
+                            <input
+                                type="color"
+                                id="updated-fill-input"
+                                onChange={(event) => {
+                                    updateColor(
+                                        "fill",
+                                        event.target.value
+                                    )
                                 }}
                             />
                             <button onClick={() => {
