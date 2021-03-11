@@ -1,9 +1,23 @@
-import React, {useState} from "react"
+import React, {useState, useEffect} from "react"
 import "./App.css"
 
 const App = () => {
-    const [updatedText, setUpdatedText] = useState("")
+    const [updatedColor, setUpdatedColor] = useState("")
     const [selectedShape, setSelectedShape] = useState("")
+    const [spacing, setSpacing] = useState(16)
+
+    useEffect(() => {
+        if (selectedShape) {
+            /*
+            Remove the selected-shape class from the previous shape,
+            whenever a new shape is selected
+            */
+            return () => {
+                selectedShape.classList.remove("selected-shape")
+            }
+        }
+    },
+    [selectedShape])
 
     const lotsOfNumbers = [
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
@@ -17,29 +31,60 @@ const App = () => {
         />
     }
 
-    const selectShape = (id) => {
-        setSelectedShape(id)
-        let shapeElement = document.getElementById(id)
+    const toggleModal = (dialogElement, open=true) => {
+        /*
+        Instead of showModal() and close(),
+        set/remove the open attribute on unsupported browsers
+        */
+        if (typeof dialogElement.showModal === "function") {
+            if (open) {
+                dialogElement.showModal()
+            } else {
+                dialogElement.close()
+            }
+        } else {
+            if (open) {
+                dialogElement.setAttribute("open", "true")
+            } else {
+                dialogElement.removeAttribute("open")
+            }
+        }
+    }
+
+    const selectShape = (shapeIdentifier) => {
+        let shapeElement = document.getElementById(shapeIdentifier)
+        setSelectedShape(shapeElement)
         shapeElement.classList.add("selected-shape")
     }
 
-    const showDialog = (dialogType) => {
-        if (dialogType === "Add shape") {
-            console.log("Adding a new shape")
-        } else if (dialogType === "Edit shape") {
-            console.log(selectedShape)
-        } else {
-            setUpdatedText("")
-            let dialogElement = document.querySelector("dialog")
-            /*
-            Instead of showModal() and close(),
-            set/remove the open attribute on unsupported browsers
-            */
-            if (typeof dialogElement.showModal === "function") {
-                dialogElement.showModal()
-            } else { // Does basically the same thing as showModal()
-                dialogElement.setAttribute("open", "true")
-            }
+    const commitAction = (actionType) => {
+        switch (actionType) {
+            case "Add shape":
+                console.log("Adding a shape")
+                break
+            case "Edit shape":
+                if (!selectedShape) {
+                    console.log("Select a shape to edit first.")
+                    return
+                }
+                let colorDialog = document
+                    .getElementById("color-dialog")
+                toggleModal(colorDialog, true)
+                break
+            case "Delete shape":
+                if (!selectedShape) {
+                    console.log("Select which shape to delete first.")
+                    return
+                }
+                console.log("Deleting this selected thing")
+                break
+            case "Adjust spacing":
+                let spacingDialog = document
+                    .getElementById("spacing-dialog")
+                toggleModal(spacingDialog, true)
+                break
+            default:
+                throw new Error("Unsupported command")
         }
     }
 
@@ -53,7 +98,7 @@ const App = () => {
                 {listItems.map(item => {
                     return (
                         <li key={item} onClick={() => {
-                            showDialog(item)
+                            commitAction(item)
                         }}>
                             {item}
                         </li>
@@ -73,32 +118,49 @@ const App = () => {
             <main>
                 
                 <section>
-                    <dialog>
-                        <header> Update </header>
+                    <dialog id="color-dialog">
+                        <header> Edit shape </header>
                         <p>
-                            <label htmlFor="updated-text-input">
-                                Update the paragraph text:
+                            <label htmlFor="updated-color-input">
+                                New color:
                             </label>
                             <input
-                                type="text"
-                                id="updated-text-input"
-                                value={updatedText}
+                                type="color"
+                                id="updated-color-input"
+                                value={updatedColor}
                                 onChange={(event) => {
-                                    setUpdatedText(event.target.value)
+                                    setUpdatedColor(event.target.value)
                                 }}
                             />
                             <button onClick={() => {
-                                let dialogElement = document
-                                    .querySelector("dialog")
-                                if (
-                                    typeof dialogElement.close
-                                    === "function"
-                                ) {
-                                    dialogElement.close()
-                                } else {
-                                    dialogElement
-                                        .removeAttribute("open")
-                                }
+                                let colorDialog = document
+                                    .getElementById("color-dialog")
+                                toggleModal(colorDialog, false)
+                            }}>
+                                OK
+                            </button>
+                        </p>
+                    </dialog>
+                    <dialog id="spacing-dialog">
+                        <header> Adjust spacing </header>
+                        <p>
+                            <label htmlFor="updated-margin-input">
+                                Margin (in pixels):
+                            </label>
+                            <input
+                                type="number"
+                                min="1"
+                                max="100"
+                                id="updated-margin-input"
+                                value={spacing}
+                                onChange={(event) => {
+                                    setSpacing(event.target.value)
+                                }}
+                            />
+                            <button onClick={() => {
+                                let spacingDialog = document
+                                    .getElementById("spacing-dialog")
+                                toggleModal(spacingDialog, false)
                             }}>
                                 OK
                             </button>

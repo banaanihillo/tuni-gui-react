@@ -44,9 +44,9 @@ dialog header {
 }
 
 dialog input {
-    margin: 1em 1em 1em 1em;
+    margin: 1em auto 1em auto;
     background-color: violet;
-    width: 50vw;
+    width: 5vw;
 }
 
 dialog p {
