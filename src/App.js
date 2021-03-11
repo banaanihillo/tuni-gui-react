@@ -60,7 +60,41 @@ const App = () => {
     const commitAction = (actionType) => {
         switch (actionType) {
             case "Add shape":
-                console.log("Adding a shape")
+                /*
+                React may or may not fully support SVG creation,
+                so defer to raw creation of namespace elements,
+                to ensure the XML namespace URI really works
+                */
+                let shapeContainer = document
+                    .getElementById("shape-container")
+                let newShape = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "svg"
+                )
+                newShape.setAttribute("width", 50)
+                newShape.setAttribute("height", 50)
+                // Should change this to uniqueID, perhaps
+                newShape.setAttribute(
+                    "id",
+                    `Semi-random ID: ${Math.random() * 100000000}`
+                )
+                newShape.setAttribute("stroke", "deeppink")
+                newShape.setAttribute("fill", "deeppink")
+                newShape.setAttribute("onclick", (event) => {
+                    selectShape(event.target.id)
+                })
+                
+                let newCircle = document.createElementNS(
+                    "http://www.w3.org/2000/svg",
+                    "circle"
+                )
+                newCircle.setAttribute("cx", 25)
+                newCircle.setAttribute("cy", 25)
+                newCircle.setAttribute("r", 20)
+                // Append the circle onto the SVG,
+                newShape.appendChild(newCircle)
+                // and then append the SVG onto the <p> container
+                shapeContainer.appendChild(newShape)
                 break
             case "Edit shape":
                 if (!selectedShape) {
