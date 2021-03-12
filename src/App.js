@@ -3,7 +3,7 @@ import "./App.css"
 
 const App = () => {
     const [selectedShape, setSelectedShape] = useState(null)
-    const [spacing, setSpacing] = useState(16)
+
     const [notification, setNotification] = useState({
         message: "",
         target: null,
@@ -250,12 +250,17 @@ const App = () => {
                             </label>
                             <input
                                 type="number"
-                                min="1"
+                                min="-10"
                                 max="100"
                                 id="updated-margin-input"
-                                value={spacing}
+                                
                                 onChange={(event) => {
-                                    setSpacing(event.target.value)
+                                    let shapes = document
+                                        .querySelectorAll("svg")
+                                    for (let shape of shapes) {
+                                        shape.style.margin
+                                        = `${event.target.value}px`
+                                    }
                                 }}
                             />
                             <button onClick={() => {
