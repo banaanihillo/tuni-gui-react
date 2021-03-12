@@ -73,14 +73,12 @@ const App = () => {
                 newShape.setAttribute("width", 50)
                 newShape.setAttribute("height", 50)
                 // Should change this to uniqueID, perhaps
-                newShape.setAttribute(
-                    "id",
-                    `Semi-random ID: ${Math.random() * 100000000}`
-                )
+                const id = `${Math.random() * 100000000} bananas`
+                newShape.setAttribute("id", id)
                 newShape.setAttribute("stroke", "deeppink")
                 newShape.setAttribute("fill", "deeppink")
-                newShape.setAttribute("onclick", (event) => {
-                    selectShape(event.target.id)
+                newShape.addEventListener("click", () => {
+                    selectShape(id)
                 })
                 
                 let newCircle = document.createElementNS(
