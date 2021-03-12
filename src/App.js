@@ -4,6 +4,11 @@ import "./App.css"
 const App = () => {
     const [selectedShape, setSelectedShape] = useState(null)
     const [spacing, setSpacing] = useState(16)
+    const [notification, setNotification] = useState({
+        message: "",
+        target: null,
+        container: null
+    })
 
     useEffect(() => {
         if (selectedShape) {
@@ -57,6 +62,8 @@ const App = () => {
     }
 
     const commitAction = (actionType) => {
+        let shapeContainer = document.getElementById("shape-container")
+        let colorDialog = document.getElementById("color-dialog")
         switch (actionType) {
             case "Add shape":
                 /*
@@ -64,8 +71,7 @@ const App = () => {
                 so defer to raw creation of namespace elements,
                 to ensure the XML namespace URI really works
                 */
-                let shapeContainer = document
-                    .getElementById("shape-container")
+
                 let newShape = document.createElementNS(
                     "http://www.w3.org/2000/svg",
                     "svg"
@@ -95,19 +101,35 @@ const App = () => {
                 break
             case "Edit shape":
                 if (!selectedShape) {
-                    console.log("Select a shape to edit first.")
+                    setNotification({
+                        ...notification,
+                        message: "Select a shape to edit first."
+                    })
                     return
                 }
-                let colorDialog = document
-                    .getElementById("color-dialog")
+
                 toggleModal(colorDialog, true)
                 break
             case "Delete shape":
                 if (!selectedShape) {
-                    console.log("Select which shape to delete first.")
+                    setNotification({
+                        ...notification,
+                        message: "Select which shape to delete first."
+                    })
                     return
                 }
-                console.log("Deleting this selected thing")
+                /*
+                Prevent the user from attempting to modify the color,
+                if that shape has already been deleted
+                */
+                toggleModal(colorDialog, false)
+                selectedShape.remove()
+                setSelectedShape(null)
+                setNotification({
+                    message: `Removed ${selectedShape.id}.`,
+                    target: selectedShape,
+                    container: shapeContainer
+                })
                 break
             case "Adjust spacing":
                 let spacingDialog = document
@@ -147,6 +169,30 @@ const App = () => {
         let shapeElement = document.getElementById(selectedShape.id)
         shapeElement.setAttribute(colorProperty, updatedValue)
         setSelectedShape(shapeElement)
+    }
+
+    const Notification = () => {
+        if (!notification.message) {
+            return null
+        }
+        return <span>
+            <p>
+                {notification.message}
+            </p>
+            {
+            notification.target &&
+            <button onClick={() => {
+                notification.container.appendChild(notification.target)
+                setNotification({
+                    message: null,
+                    target: null,
+                    container: null
+                })
+            }}>
+                Undo
+            </button>
+            }
+        </span>
     }
     
     return (
@@ -240,6 +286,9 @@ const App = () => {
                     </p>
                 </section>
             </main>
+            <footer>
+                <Notification />
+            </footer>
         </span>
     )
 }
