@@ -3,72 +3,17 @@ html {
     color: deeppink;
 }
 
-nav > ul {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
+/*
+Support for vertical range sliders is abysmal,
+so include a webkit quirk in addition to the Gecko orient
+*/
+input[type="range"] {
+    -webkit-appearance: slider-vertical;
+    margin-right: 1em;
 }
 
-nav > ul > li {
-    list-style: none;
-    cursor: pointer;
-    margin: 0 1em 0 1em;
-}
-
-nav > ul > li:hover {
-    background-color: darkmagenta;
-    color: cyan;
-}
-
-header,
-main {
-    border: 1px solid cyan;
+.range-container {
     text-align: center;
 }
 
-dialog {
-    background-color: black;
-    color: deeppink;
-}
-
-dialog button {
-    background-color: cyan;
-    width: 3em;
-    margin: 0 auto 0 auto;
-}
-
-dialog header {
-    margin: 0 auto 1em auto;
-    padding: 0.2em;
-    width: 5em;
-}
-
-dialog input {
-    margin: 1em auto 1em auto;
-    background-color: violet;
-    width: 5vw;
-}
-
-dialog p {
-    display: flex;
-    flex-flow: column nowrap;
-}
-
-input,
-button {
-    border: 1px solid darkmagenta;
-}
-
-#shape-container {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-}
-
-#shape-container svg {
-    margin: 0 1em 0 1em;
-}
-
-.selected-shape {
-    outline: 1px solid cyan;
-}
+/**/
