@@ -3,56 +3,25 @@ html {
     color: magenta;
 }
 
-input,
-select {
+input {
     background-color: violet;
-    margin-left: 1em;
-}
-
-/*
-Make the input just big enough to fit four numbers in,
-to guide the user into how many numbers are expected
-*/
-input[type="number"] {
-    width: 3.5em;
-}
-
-.list-container {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
-}
-
-/*
-Stripe the list item background from black to dark-ish gray
-*/
-li:nth-child(even) {
-    background-color: #222222;
-}
-
-.selected {
-    outline: 1px solid darkmagenta;
-}
-
-/*
-Simple visual cue to tell the user that a list item can be selected
-*/
-li:hover {
-    cursor: pointer;
+    margin: 1em;
 }
 
 button {
     background-color: plum;
+    margin: 1em;
 }
 
-.application-container {
-    display: flex;
-    flex-flow: column nowrap;    
+table * {
+    border: 1px solid darkmagenta;
 }
 
-.button-container {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
+th {
+    min-width: 8em;
 }
-/* */
+
+td {
+    text-align: center;
+}
+/**/
