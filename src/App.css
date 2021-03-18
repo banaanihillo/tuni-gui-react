@@ -1,19 +1,58 @@
 html {
     background-color: black;
-    color: deeppink;
+    color: magenta;
+}
+
+input,
+select {
+    background-color: violet;
+    margin-left: 1em;
 }
 
 /*
-Support for vertical range sliders is abysmal,
-so include a webkit quirk in addition to the Gecko orient
+Make the input just big enough to fit four numbers in,
+to guide the user into how many numbers are expected
 */
-input[type="range"] {
-    -webkit-appearance: slider-vertical;
-    margin-right: 1em;
+input[type="number"] {
+    width: 3.5em;
 }
 
-.range-container {
-    text-align: center;
+.list-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
 }
 
-/**/
+/*
+Stripe the list item background from black to dark-ish gray
+*/
+li:nth-child(even) {
+    background-color: #222222;
+}
+
+.selected {
+    outline: 1px solid darkmagenta;
+}
+
+/*
+Simple visual cue to tell the user that a list item can be selected
+*/
+li:hover {
+    cursor: pointer;
+}
+
+button {
+    background-color: plum;
+}
+
+.application-container {
+    display: flex;
+    flex-flow: column nowrap;    
+}
+
+.button-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+}
+/* */
