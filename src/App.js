@@ -57,13 +57,50 @@ const App = () => {
         }
     }
 
+    const sortByDate = () => {
+        const copyOfEvents = [...calendarEvents]
+        copyOfEvents.sort((item1, item2) => {
+            return (
+                new Date(item1.date).getTime()
+                - new Date(item2.date).getTime()
+            )
+        })
+        setCalendarEvents(copyOfEvents)
+    }
+
+    const sortByPrivate = () => {
+        const copyOfEvents = [...calendarEvents]
+        copyOfEvents.sort((item1, item2) => {
+            return (item2.isPrivate - item1.isPrivate)
+        })
+        setCalendarEvents(copyOfEvents)
+    }
+
     return <span>
         <table>
             <thead>
                 <tr>
-                    <th> Date </th>
+                    <th>
+                        Date
+                        <span
+                            onClick={() => sortByDate()}
+                            aria-label="Sort by date"
+                            className="sort-button"
+                        >
+                            ↕
+                        </span>
+                    </th>
                     <th> Event </th>
-                    <th> Private </th>
+                    <th>
+                        Private
+                        <span
+                            onClick={() => sortByPrivate()}
+                            aria-label="Sort by private"
+                            className="sort-button"
+                        >
+                            ↕
+                        </span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -83,6 +120,12 @@ const App = () => {
         </table>
         <button onClick={() => toggleModal(true)}>
             Add
+        </button>
+        <button onClick={() => sortByDate()}>
+            Sort by date
+        </button>
+        <button onClick={() => sortByPrivate()}>
+            Sort by private
         </button>
         <dialog>
             <form onSubmit={(event) => {

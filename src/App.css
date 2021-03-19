@@ -37,3 +37,12 @@ Make the year input just big enough to fit YYYY in
 input[type="number"] {
     width: 3.5em;
 }
+
+.sort-button {
+    border: none;
+    padding: 0.5em;
+}
+
+.sort-button:hover {
+    cursor: pointer;
+}
