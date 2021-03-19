@@ -24,4 +24,8 @@ th {
 td {
     text-align: center;
 }
-/**/
+
+dialog {
+    background-color: black;
+    color: magenta;
+}

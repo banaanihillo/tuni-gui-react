@@ -1,73 +1,69 @@
 import React, {useState} from "react"
 import "./App.css"
-//
+
 const App = () => {
-    const [name, setName] = useState("")
-    const [student, toggleStudent] = useState(false)
-    const [persons, setPersons] = useState([])
-    return <div>
-        <form onSubmit={(event) => {
-            event.preventDefault()
-            if (!name) {
-                return console.log("Input a name first.")
+    const [calendarEvents/*, setCalendarEvents*/] = useState([
+        {
+            date: "1970-01-01",
+            description: "The beginning of time",
+            private: false,
+            id: "Bananana anana na bana"
+        }
+    ])
+
+    const showDialog = (open=true) => {
+        let dialogElement = document.querySelector("dialog")
+        if (typeof dialogElement.showModal === "function") {
+            if (open) {
+                dialogElement.showModal()
+            } else {
+                dialogElement.close()
             }
-            setName("")
-            toggleStudent(false)
-            setPersons(persons.concat({
-                name,
-                student,
-                id: `${Math.random() * 100000000} banananananas`
-            }))
-        }}>
-            <label htmlFor="name-input">
-                Name
-            </label>
-            <input
-                type="text"
-                id="name-input"
-                value={name}
-                onChange={(event) => {
-                    setName(event.target.value)
-                }}
-            />
-            <br />
-            <label htmlFor="student-checkbox">
-                Student
-            </label>
-            <input
-                type="checkbox"
-                id="student-checkbox"
-                checked={student}
-                onChange={() => toggleStudent(!student)}
-            />
-            <br />
-            <button type="submit">
-                Add
-            </button>
-        </form>
-        <hr />
+        } else {
+            if (open) {
+                dialogElement.setAttribute("open", "true")
+            } else {
+                dialogElement.removeAttribute("open")
+            }
+        }
+    }
+
+    return <span>
         <table>
             <thead>
                 <tr>
-                    <th> Name </th>
-                    <th> Student </th>
+                    <th> Date </th>
+                    <th> Event </th>
+                    <th> Private </th>
                 </tr>
             </thead>
             <tbody>
-                {persons.map(person => {
-                    return <tr key={person.id}>
-                        <td> {person.name} </td>
+                {calendarEvents.map(calendarEvent => {
+                    return <tr key={calendarEvent.id}>
+                        <td> {calendarEvent.date} </td>
+                        <td> {calendarEvent.description} </td>
                         <td>
-                            {(person.student)
-                                ? "Is a student"
-                                : "Not a student"
+                            {(calendarEvent.private)
+                                ? "Private"
+                                : "Public"
                             }
                         </td>
                     </tr>
                 })}
             </tbody>
         </table>
-    </div>
+        <button onClick={() => showDialog(true)}>
+            Add
+        </button>
+        <dialog>
+            <button>
+                Add
+            </button>
+            <button onClick={() => showDialog(false)}>
+                Cancel
+            </button>
+        </dialog>
+    </span>
 }
 
 export default App
