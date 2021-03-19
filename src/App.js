@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, {useState} from "react"
 import "./App.css"
 
@@ -17,6 +18,7 @@ const App = () => {
         month: "",
         day: ""
     })
+    const [message, setMessage] = useState(null)
 
     const mapOptions = (optionValue) => {
         return <option key={optionValue}>
@@ -39,6 +41,19 @@ const App = () => {
             } else {
                 dialogElement.removeAttribute("open")
             }
+        }
+    }
+
+    const Notification = () => {
+        if (!message) {
+            return null
+        } else {
+            return <div>
+                <p> {message} </p>
+                <button onClick = {() => setMessage(null)}>
+                    OK
+                </button>
+            </div>
         }
     }
 
@@ -72,8 +87,19 @@ const App = () => {
         <dialog>
             <form onSubmit={(event) => {
                 event.preventDefault()
+                const newDate = `${
+                    date.year}-${date.month}-${date.day
+                }`
+                /* Loose comparison to see if the date input was,
+                    for instance, month 02 and day 30
+                */
+                if (new Date(newDate) == "Invalid Date") {
+                    setMessage("Invalid date.")
+                    return
+                }
+                setMessage(null)
                 setCalendarEvents(calendarEvents.concat({
-                    date: `${date.year}-${date.month}-${date.day}`,
+                    date: newDate,
                     name,
                     isPrivate,
                     id: `${Math.random() * 500600700} banana anana`
@@ -185,6 +211,7 @@ const App = () => {
                 >
                     Cancel
                 </button>
+                <Notification />
             </form>
         </dialog>
     </span>
