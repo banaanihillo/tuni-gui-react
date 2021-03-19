@@ -3,7 +3,8 @@ html {
     color: magenta;
 }
 
-input {
+input,
+select {
     background-color: violet;
     margin: 1em;
 }
@@ -28,4 +29,11 @@ td {
 dialog {
     background-color: black;
     color: magenta;
+}
+
+/*
+Make the year input just big enough to fit YYYY in
+*/
+input[type="number"] {
+    width: 3.5em;
 }
