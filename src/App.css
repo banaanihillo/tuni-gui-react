@@ -3,46 +3,17 @@ html {
     color: magenta;
 }
 
-input,
-select {
-    background-color: violet;
-    margin: 1em;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-button {
-    background-color: plum;
-    margin: 1em;
-}
-
-table * {
+p {
     border: 1px solid darkmagenta;
 }
 
-th {
-    min-width: 8em;
+canvas {
+    border: 1px solid cyan;
 }
-
-td {
-    text-align: center;
-}
-
-dialog {
-    background-color: black;
-    color: magenta;
-}
-
-/*
-Make the year input just big enough to fit YYYY in
-*/
-input[type="number"] {
-    width: 3.5em;
-}
-
-.sort-button {
-    border: none;
-    padding: 0.5em;
-}
-
-.sort-button:hover {
-    cursor: pointer;
-}
+/* */
