@@ -9,7 +9,16 @@ html {
     padding: 0;
 }
 
-hr {
+button {
+    background-color: violet;
+    width: 5em;
+}
+
+p {
+    margin: 1em;
+}
+
+button {
     margin: 1em;
 }
 /**/
