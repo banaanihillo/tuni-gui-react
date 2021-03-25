@@ -9,11 +9,7 @@ html {
     padding: 0;
 }
 
-p {
-    border: 1px solid darkmagenta;
+hr {
+    margin: 1em;
 }
-
-canvas {
-    border: 1px solid cyan;
-}
-/* */
+/**/

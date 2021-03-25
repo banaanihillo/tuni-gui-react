@@ -1,74 +1,55 @@
-/* eslint-disable eqeqeq */
-import React from "react"
+import React, {useState} from "react"
 import "./App.css"
+// Public domain, via pikist.com
+import torontoSkyline from "./toronto-skyline-500x330.jpg"
+// Also public domain, via photos-public-domain.com
+import orangeSunset from "./orange-sunset-with-trees-600x400.jpg"
 
 const App = () => {
+    const [image, setImage] = useState(torontoSkyline)
     return <main>
-        <section>
-            <p>
-                Select text to be dragged with your mouse,
-                and drag it onto another paragraph,
-                or onto the canvas below
-            </p>
-            <p>
-                Try dragging selected text from this paragraph,
-                to append it onto the existing paragraphs,
-                or select the entire paragraph,
-                to create a new copy of the paragraph
-            </p>
-            <p>
-                These paragraphs are not editable,
-                so you may not overwrite them -
-                use the ones below to see how overwrite works
-            </p>
-        </section>
-        <hr />
-        <section
-            draggable={true}
-            suppressContentEditableWarning={true}
-            contentEditable={true}
-            onDragStart={(event) => {
-                event.dataTransfer.setData(
-                    "text/html",
-                    event.target.textContent
-                )
+        <img
+            src={image}
+            width={500}
+            height={330}
+            alt="The skyline of Toronto, with Rogers Centre and the CN Tower in the forefront"
+            onDrop={(event) => {
+                event.preventDefault()
+                let file = event.dataTransfer.files[0]
+                if (file && file.type === "image/jpeg") {
+                    let fileReader = new FileReader()
+                    fileReader.onloadend = () => {
+                        setImage(fileReader.result)
+                    }
+                    fileReader.readAsDataURL(file)
+                }
             }}
-        >
+            onDragOver={(event) => {
+                event.preventDefault()
+                event.dataTransfer.dropEffect = "copy"
+            }}
+        />
+        <hr /> 
+        <figure>
+            <figcaption>
+                Try dragging this image from the source folder,
+                or any jpeg image, really, <br />
+                onto the existing Toronto skyline image
+            </figcaption>
+            <img
+                src={orangeSunset}
+                alt="Dark outlines of trees showered by the light of the setting Sun"
+            />
             <p>
-                You can cut these paragraphs
+                As for the above image itself - <br />
+                It is purely decorational,
+                just acting as a reminder that you may freely test the functionality with the existing image in the source folder
             </p>
-            <p>
-                Also try selecting single words from these paragraphs
-            </p>
-            <p>
-                Three two one
-            </p>
-        </section>
-        <section>
-            <figure>
-                <figcaption> Drag here </figcaption>
-                <canvas
-                    width={window.innerWidth - 100}
-                    height={200}
-                    contentEditable={true}
-                    suppressContentEditableWarning={true}
-                    onDrop={(event) => {
-                        let data = event.dataTransfer.getData(
-                            "text/html"
-                        )
-                        let context = event.target.getContext("2d")
-                        context.strokeStyle = "magenta"
-                        context.fillStyle = "magenta"
-                        context.fillText(
-                            data,
-                            event.clientX,
-                            (event.clientY - event.target.height)
-                        )
-                    }}
-                ></canvas>
-            </figure>
-        </section>
-    </main>
+            <footer>
+                The images used are in the public domain.
+            </footer>
+        </figure>
+    </main> 
 }
 
 export default App
