@@ -12,13 +12,35 @@ html {
 button {
     background-color: violet;
     width: 5em;
-}
-
-p {
     margin: 1em;
 }
 
-button {
+p,
+h1,
+figure {
     margin: 1em;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+/*
+Browsers give editable content an outline by default,
+so I guess it's reasonable to leave the visual cue in there,
+just changing it from the default white into something more fitting
+*/
+[contenteditable] {
+    border: 1px solid darkmagenta;
+}
+
+main {
+    border: 1px solid cyan;
+}
+
+main:hover {
+    border: 1px solid magenta;
 }
 /**/
