@@ -33,14 +33,6 @@ so I guess it's reasonable to leave the visual cue in there,
 just changing it from the default white into something more fitting
 */
 [contenteditable] {
-    border: 1px solid darkmagenta;
-}
-
-main {
-    border: 1px solid cyan;
-}
-
-main:hover {
-    border: 1px solid magenta;
+    border: 1px solid deeppink;
 }
 /**/

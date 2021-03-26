@@ -4,64 +4,12 @@ import torontoSkyline from "./toronto-skyline-500x330.jpg"
 
 const App = () => {
     const [image, setImage] = useState(torontoSkyline)
-    /*
-    const appendText = (event) => {
-        setText(text + event.target.innerText)
-        setUndoStack([
-            ...undoStack,
-            event.target.innerText
-        ])
-    }
-    */
+    const [headingText, setHeadingText] = useState("Editable heading")
+    const [captionText, setCaptionText] = useState("Editable caption")
+    const [undoStack, setUndoStack] = useState(null)
+    const [redoStack, setRedoStack] = useState(null)
 
-    /*
-    const undoText = () => {
-        console.log(undoStack)
-        // Do nothing if the undo stack is empty
-        if (undoStack.length > 0) {
-            // Make a shallow copy of the current undo stack,
-            const copyOfUndoStack = [...undoStack]
-            // and remove the item on the top of the stack
-            const removedItem = copyOfUndoStack.pop()
-            // Set the text as the old text minus the removed item
-            setHeadingText(copyOfUndoStack.join(""))
-            // Update the undo stack,
-            // to no longer include the undoed (undid?) item
-            setUndoStack(copyOfUndoStack)
-            // Add the removed undo item into the redo stack
-            setRedoStack([
-                ...redoStack,
-                removedItem
-            ])
-        }
-    }
-    */
-
-    /*
-    const redoText = () => {
-        // Also do nothing if the redo stack is empty
-        if (redoStack.length > 0) {
-            // Take the item on top of the stack,
-            const lastItem = redoStack[redoStack.length - 1]
-            // and append it onto the existing text
-            setHeadingText(headingText + lastItem)
-            // Make a shallow copy of the current redo stack,
-            const copyOfRedoStack = [...redoStack]
-            // and remove the item on top of the stack
-            copyOfRedoStack.pop()
-            // Update the redo stack,
-            // to no longer include the redone (?) item
-            setRedoStack(copyOfRedoStack)
-            // Add the removed redo item into the undo stack
-            setUndoStack([
-                ...undoStack,
-                lastItem
-            ])
-        }
-    }
-    */
-
-    return (
+    return <span>
         <main
             contentEditable={true}
             suppressContentEditableWarning={true}
@@ -79,13 +27,18 @@ const App = () => {
                     event.target.innerHTML
                 )
             }}
+            onPaste={(event) => {
+                event.preventDefault()
+                setUndoStack(event.target.outerHTML)
+                const pastedText = event.clipboardData.getData("text")
+                const splitText = pastedText.split("\n")
+                setHeadingText(splitText[0])
+                setCaptionText(splitText[1])
+            }}
         >
             <header>
-                <h1
-                    contentEditable={true}
-                    suppressContentEditableWarning={true}
-                >
-                    Editable heading
+                <h1>
+                    {headingText}
                 </h1>
             </header>
             <figure>
@@ -108,18 +61,68 @@ const App = () => {
                         event.dataTransfer.dropEffect = "copy"
                     }}
                 />
-                <figcaption
-                    contentEditable={true}
-                    suppressContentEditableWarning={true}
-                    onInput={(event) => {
-                        console.log(event.target.textContent)
-                    }}
-                >
-                    Editable caption
+                <figcaption>
+                    {captionText}
                 </figcaption>
             </figure>
         </main>
-    )
+        <footer>
+            <span className="button-container">
+                <button onClick={() => {
+                    if (!undoStack) {
+                        return console.log("Nothing to undo.")
+                    }
+                    const mainElement = document.querySelector("main")
+                    setRedoStack(mainElement.outerHTML)
+                    mainElement.outerHTML = undoStack
+                    setUndoStack(null)
+                }}>
+                    Undo
+                </button>
+                <button onClick={() => {
+                    if (!redoStack) {
+                        return console.log("Nothing to redo.")
+                    }
+                    const mainElement = document.querySelector("main")
+                    setUndoStack(mainElement.outerHTML)
+                    mainElement.outerHTML = redoStack
+                    setRedoStack(null)
+                }}>
+                    Redo
+                </button>
+            </span>
+            <p>
+                Use the context menu for text content manipulation.
+                <br />
+                Click anywhere on the above container to access all the available commands detailed below.
+            </p>
+            <p>
+                Select all (<code>ctrl + a</code>)
+                enables selection of all the page content.
+            </p>
+            <p>
+                Copy (<code>ctrl + c</code>)
+                copies the selection as rich text.
+                Try pasting it into Word, for example.
+                <br />
+                Also try copying text content with a line break in between from somewhere else,
+                and Paste (<code>ctrl + v</code>) it here.
+            </p>
+            <p>
+                After making a change,
+                you can Undo (<code>ctrl + z</code>) that change,
+                or Redo (<code>ctrl + y</code>) a change that you just undid.
+                <br />
+                Some browsers may also use
+                <code> ctrl + shift + z </code>
+                as Redo.
+            </p>
+            <p>
+                If you wish to manipulate text pasted in from other sources,
+                use the provided Undo and Redo buttons.
+            </p>
+        </footer>
+    </span>
 }
 
 export default App
