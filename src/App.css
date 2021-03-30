@@ -11,28 +11,44 @@ html {
 
 button {
     background-color: violet;
-    width: 5em;
+    width: 20vw;
+    padding: 1em;
     margin: 1em;
 }
 
-p,
-h1,
-figure {
-    margin: 1em;
-    text-align: center;
+button[type="cancel"] {
+    background-color: tomato;
 }
 
 .button-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 0.2em 0;
 }
 
-/*
-Browsers give editable content an outline by default,
-so I guess it's reasonable to leave the visual cue in there,
-just changing it from the default white into something more fitting
-*/
-[contenteditable] {
-    border: 1px solid deeppink;
+form {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    border: 1px solid darkmagenta;
+    padding: 0.2em;
+}
+
+.input-container {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+canvas {
+    display: block;
+    border: 1px solid cyan;
+    text-align: center;
+    margin: 0 auto;
+}
+
+input[type="number"] {
+    width: 3.6em;
+    background-color: violet;
 }
 /**/
