@@ -1,146 +1,126 @@
-import React, {
-    useState,
-    useEffect,
-    useRef as useReference
-} from "react"
+import React, {useState, useEffect} from "react"
 import "./App.css"
 //
 const App = () => {
-    // Let the canvas breathe just a bit,
-    // to avoid a one-pixel overflow and scrollbars
+    const [topText, setTopText] = useState("Captioned")
+    const [bottomText, setBottomText] = useState("image")
     const [canvasWidth, setCanvasWidth] = useState(
         window.innerWidth - 20
     )
-    // Also make some space for the buttons
+
     const [canvasHeight, setCanvasHeight] = useState(
-        window.innerHeight - 100
+        window.innerHeight - 80
     )
-    const [houseWidth, setHouseWidth] = useState(10)
-    const [houseHeight, setHouseHeight] = useState(10)
-    const canvasReference = useReference(null)
+    const [canvasContext, setCanvasContext] = useState(null)
 
     useEffect(() => {
-        // Re-set the canvas width and height,
-        // whenever the user modifies the window size
+
         window.onresize = (event) => {
             setCanvasWidth(event.target.innerWidth - 20)
-            setCanvasHeight(event.target.innerHeight - 100)
+            setCanvasHeight(event.target.innerHeight - 80)
         }
     },
-    [canvasReference])
+    [])
 
-    const paintHouse = (width, height) => {
-        // Place the house at a random point,
-        // between (0, 0) and (canvasWidth, canvasHeight)
-        const randomX = Math.round(
-            Math.random() * canvasWidth
-        )
-        const randomY = Math.round(
-            Math.random() * canvasHeight
-        )
-        let context = canvasReference.current.getContext("2d")
-        context.strokeStyle = "magenta"
-        context.fillStyle = "magenta"
-        context.fillRect(
-            randomX,
-            randomY,
-            width,
-            height
-        )
-        let path = new Path2D()
-        // Paint the roof from the top-left corner of the rectangle,
-        path.moveTo(randomX, randomY)
-        // turning around at half the width and height,
-        path.lineTo(
-            randomX + (width / 2),
-            randomY - (height / 2)
-        )
-        // and finishing at the full width of the rectangle,
-        // and at the same height the roof started from
-        path.lineTo(
-            randomX + width,
-            randomY
-        )
-        path.closePath()
-        context.fillStyle = "deeppink"
-        context.fill(path)
-    }
-
-    return <span>
-        <main>
+    return <main>
+        <figure>
+            <figcaption>
+                Paste an image URL here
+            </figcaption>
             <canvas
-                ref={canvasReference}
+                contentEditable={true}
                 width={canvasWidth}
                 height={canvasHeight}
-            ></canvas>
-            <span className="button-container">
-                <button onClick={() => {
-                    paintHouse(50, 50)
-                }}>
-                    Add a symmetric house
-                </button>
-                <form onSubmit={(event) => {
+                onPaste={(event) => {
                     event.preventDefault()
-                    paintHouse(houseWidth, houseHeight)
-                }}>
-                    <span className="input-container">
-                        <label htmlFor="width-input">
-                            Width
-                        </label>
-                        <input
-                            type="number"
-                            min={10}
-                            max={100}
-                            id="width-input"
-                            value={houseWidth}
-                            title="Width between 10 and 100 pixels"
-                            onChange={(event) => {
-                                setHouseWidth(
-                                    Number(event.target.value)
-                                )
-                            }}
-                        />
-                        <br />
-                        <label htmlFor="height-input">
-                            Height
-                        </label>
-                        <input
-                            type="number"
-                            min={10}
-                            max={100}
-                            id="height-input"
-                            value={houseHeight}
-                            title="Height between 10 and 100 pixels"
-                            onChange={(event) => {
-                                setHouseHeight(
-                                    Number(event.target.value)
-                                )
-                            }}
-                        />
-                    </span>
-                    <button type="submit">
-                        Add a wacky house
-                    </button>
-                </form>
-                <button
-                    type="cancel"
-                    onClick={() => {
-                        let context = canvasReference.current
-                            .getContext("2d")
-                        context.clearRect(
+                    let image = new Image()
+                    image.src = event.clipboardData.getData("text")
+                    let context = event.target.getContext("2d")
+                    context.fillStyle = "magenta"
+                    context.font = "20px sans-serif"
+                    image.onload = () => {
+                        /* Center the text,
+                        by first measuring the total width,
+                        then dividing it in half
+                        */
+                        const topTextCenter = context
+                            .measureText(topText)
+                                .width / 2
+                        const bottomTextCenter = context
+                            .measureText(bottomText)
+                                .width / 2
+                        /* Use the width and height of the canvas,
+                        and the intrinsic size of the pasted image,
+                        to draw it at the center of the canvas
+                        */
+                        context.drawImage(
+                            image,
+                            (canvasWidth - image.naturalWidth) / 2,
+                            (canvasHeight - image.naturalHeight) / 2
+                        )
+                        /* Take the center of the canvas,
+                        and the canvas center minus the text center,
+                        to find out where the text should start,
+                        to make it centered along the canvas
+                        */
+                        context.fillText(
+                            topText,
+                            (canvasWidth / 2 - topTextCenter),
+                            20
+                        )
+                        context.fillText(
+                            bottomText,
+                            (canvasWidth / 2 - bottomTextCenter),
+                            (canvasHeight - 20)
+                        )
+                    }
+                    context.save()
+                    setCanvasContext(context)
+                }}
+            ></canvas>
+        </figure>
+        <form>
+            <label htmlFor="top-text-input">
+                Top text
+            </label>
+            <input
+                type="text"
+                id="top-text-input"
+                value={topText}
+                onChange={(event) => {
+                    setTopText(event.target.value)
+                }}
+            />
+            <label htmlFor="bottom-text-input">
+                Bottom text
+            </label>
+            <input
+                type="text"
+                id="bottom-text-input"
+                value={bottomText}
+                onChange={(event) => {
+                    setBottomText(event.target.value)
+                }}
+            />
+            <button
+                type="cancel"
+                onClick={(event) => {
+                    event.preventDefault()
+                    if (canvasContext) {
+                        canvasContext.clearRect(
                             0,
                             0,
                             canvasWidth,
                             canvasHeight
                         )
-                    }}
-                >
-                    Clear canvas
-                </button>
-            </span>
-        </main>
-        <footer></footer>
-    </span>
+                    }
+                }}
+            >
+                Clear canvas
+            </button>
+        </form>
+    </main>
+
 }
 
 export default App

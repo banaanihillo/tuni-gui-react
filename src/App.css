@@ -9,35 +9,26 @@ html {
     padding: 0;
 }
 
-button {
-    background-color: violet;
-    width: 20vw;
-    padding: 1em;
-    margin: 1em;
+input {
+    background-color: plum;
 }
 
 button[type="cancel"] {
     background-color: tomato;
+    padding: 0.2em 0.2em;
 }
 
-.button-container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 0.2em 0;
-}
+/**/
 
 form {
     display: flex;
     flex-flow: row nowrap;
-    align-items: center;
-    border: 1px solid darkmagenta;
-    padding: 0.2em;
+    justify-content: space-evenly;
+    padding: 0.4em 0;
 }
 
-.input-container {
-    display: flex;
-    flex-flow: column nowrap;
+form * {
+    margin-right: 1em;
 }
 
 canvas {
@@ -47,8 +38,7 @@ canvas {
     margin: 0 auto;
 }
 
-input[type="number"] {
-    width: 3.6em;
-    background-color: violet;
+figcaption {
+    text-align: center;
 }
 /**/
