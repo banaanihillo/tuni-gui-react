@@ -8,37 +8,9 @@ html {
     margin: 0;
     padding: 0;
 }
-
-input {
-    background-color: plum;
-}
-
-button[type="cancel"] {
-    background-color: tomato;
-    padding: 0.2em 0.2em;
-}
-
-/**/
-
-form {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-evenly;
-    padding: 0.4em 0;
-}
-
-form * {
-    margin-right: 1em;
-}
-
+/* */
 canvas {
-    display: block;
-    border: 1px solid cyan;
-    text-align: center;
-    margin: 0 auto;
-}
-
-figcaption {
-    text-align: center;
+    margin: 1em auto;
+    padding-left: 10px;
 }
 /**/

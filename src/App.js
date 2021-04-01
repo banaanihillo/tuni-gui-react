@@ -1,126 +1,89 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useRef} from "react"
 import "./App.css"
 //
-const App = () => {
-    const [topText, setTopText] = useState("Captioned")
-    const [bottomText, setBottomText] = useState("image")
+const App = () => {//
     const [canvasWidth, setCanvasWidth] = useState(
         window.innerWidth - 20
-    )
-
+    )//
     const [canvasHeight, setCanvasHeight] = useState(
-        window.innerHeight - 80
+        window.innerHeight - 40
     )
-    const [canvasContext, setCanvasContext] = useState(null)
+    const [mousePosition, setMousePosition] = useState({
+        x: null,
+        y: null
+    })
+	const canvasReference = useRef(null);
 
-    useEffect(() => {
-
+    useEffect(() => {//
         window.onresize = (event) => {
             setCanvasWidth(event.target.innerWidth - 20)
-            setCanvasHeight(event.target.innerHeight - 80)
+            setCanvasHeight(event.target.innerHeight - 40)
         }
     },
-    [])
+    [canvasWidth, canvasHeight])
+	
+	const setMouseCoordinates = (event) => {
+		setMousePosition({
+            x: event.clientX,
+            y: event.clientY
+        })
+	}
 
-    return <main>
-        <figure>
-            <figcaption>
-                Paste an image URL here
-            </figcaption>
-            <canvas
-                contentEditable={true}
-                width={canvasWidth}
-                height={canvasHeight}
-                onPaste={(event) => {
-                    event.preventDefault()
-                    let image = new Image()
-                    image.src = event.clipboardData.getData("text")
-                    let context = event.target.getContext("2d")
-                    context.fillStyle = "magenta"
-                    context.font = "20px sans-serif"
-                    image.onload = () => {
-                        /* Center the text,
-                        by first measuring the total width,
-                        then dividing it in half
-                        */
-                        const topTextCenter = context
-                            .measureText(topText)
-                                .width / 2
-                        const bottomTextCenter = context
-                            .measureText(bottomText)
-                                .width / 2
-                        /* Use the width and height of the canvas,
-                        and the intrinsic size of the pasted image,
-                        to draw it at the center of the canvas
-                        */
-                        context.drawImage(
-                            image,
-                            (canvasWidth - image.naturalWidth) / 2,
-                            (canvasHeight - image.naturalHeight) / 2
-                        )
-                        /* Take the center of the canvas,
-                        and the canvas center minus the text center,
-                        to find out where the text should start,
-                        to make it centered along the canvas
-                        */
-                        context.fillText(
-                            topText,
-                            (canvasWidth / 2 - topTextCenter),
-                            20
-                        )
-                        context.fillText(
-                            bottomText,
-                            (canvasWidth / 2 - bottomTextCenter),
-                            (canvasHeight - 20)
-                        )
-                    }
-                    context.save()
-                    setCanvasContext(context)
-                }}
-            ></canvas>
-        </figure>
-        <form>
-            <label htmlFor="top-text-input">
-                Top text
-            </label>
-            <input
-                type="text"
-                id="top-text-input"
-                value={topText}
-                onChange={(event) => {
-                    setTopText(event.target.value)
-                }}
-            />
-            <label htmlFor="bottom-text-input">
-                Bottom text
-            </label>
-            <input
-                type="text"
-                id="bottom-text-input"
-                value={bottomText}
-                onChange={(event) => {
-                    setBottomText(event.target.value)
-                }}
-            />
-            <button
-                type="cancel"
-                onClick={(event) => {
-                    event.preventDefault()
-                    if (canvasContext) {
-                        canvasContext.clearRect(
-                            0,
-                            0,
-                            canvasWidth,
-                            canvasHeight
-                        )
-                    }
-                }}
-            >
-                Clear canvas
-            </button>
-        </form>
-    </main>
+    const drawCircle = (context, x, y, radius, angle) => {
+        context.moveTo(0, 0)
+        context.beginPath()
+        context.arc(x, y, radius, 0, angle)
+        context.stroke()
+    }
+	
+	useEffect(() => {
+		let context = canvasReference.current.getContext('2d');
+		if (!mousePosition.x && !mousePosition.y) {
+			return
+        }
+		// width an[d] height are used in various places,
+        // store them in these variables to shorten the following code
+		let [w, h] = [
+            canvasReference.current.width,
+            canvasReference.current.height
+        ]
 
-}
+		// clear canvas
+        context.fillStyle = "#2E3561";
+        context.fillRect(0, 0, w, h);
+        context.strokeStyle = "white";
+        context.fillStyle = "white";
+		
+		// calculate the angle from the center to the mouse point,
+        // value is in radians,
+        // as are all values to and from Math trigonometric functions
+		let angle = Math.atan2(
+            mousePosition.y - h / 2,
+            mousePosition.x - w / 2
+        )
+
+		context.save();
+		context.translate(w / 2, h / 2);
+		drawCircle(context, 0, 0, 50, 2 * Math.PI);
+        drawCircle(context, -20, -10, 10, 2 * Math.PI)
+        drawCircle(context, 20, -10, 10, 2 * Math.PI)
+        context.fillStyle = "white"
+        drawCircle(context, -20, -10, 5, angle)
+        context.fill()
+        drawCircle(context, 20, -10, 5, angle)
+        context.fill()
+		context.restore();
+	},
+    [mousePosition])
+    
+	return (
+        <canvas
+            width={canvasWidth}
+            height={canvasHeight}
+            ref={canvasReference}
+            onMouseMove={setMouseCoordinates}
+        />
+	)
+}//
 
 export default App
