@@ -10,7 +10,36 @@ html {
 }
 /* */
 canvas {
+    display: block;
     margin: 1em auto;
-    padding-left: 10px;
+    border: 1px solid cyan;
+}
+
+.diagram-input {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+}
+
+.diagram-input * {
+    margin: 1em;
+}
+
+input[type="text"] {
+    background-color: violet;
+    /* Hint for the user,
+    regarding the size of the diagram text labels
+    */
+    width: 2em;
+}
+
+label {
+    min-width: 10vw;
+}
+
+button {
+    display: block;
+    margin: 0 auto;
+    background-color: plum;
 }
 /**/
