@@ -8,34 +8,28 @@ html {
     margin: 0;
     padding: 0;
 }
-/* Stretch the stuff above the footer,
-    so the sticky effect can be seen,
-    even though the main is empty right now
-*/
-main {
-    min-height: 175vh;
-    background-color: #333333;
+
+input {
+    background-color: violet;
 }
 
-footer {
-    bottom: 0;
-    position: sticky;
-    z-index: 1;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-end;
-    padding: 1em;
-    background-color: black;
+a:link {
+    color: cyan;
 }
 
-.date-time-container {
-    display: flex;
-    flex-flow: column nowrap;
-    text-align: center;
+a:visited {
+    color: plum;
 }
 
-.fat-number {
-    font-weight: bold;
-    font-size: 2em;
+label,
+fieldset,
+p,
+input,
+cite {
+    margin: 1em;
+}
+
+legend {
+    margin-left: 1em;
 }
 /**/

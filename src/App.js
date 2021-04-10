@@ -1,47 +1,97 @@
-import React from "react"
+import React, {useState} from "react"
 import "./App.css"
-//
+import canadianDollarRates from "./FX_RATES_DAILY-sd-2021-04-09.json"
+
 const App = () => {
-    const dateTimeParts = Intl.DateTimeFormat(
+    const [EURtoCAD, toggleEURtoCAD] = useState(true)
+    const [amountToConvert, setAmountToConvert] = useState(1.00)
+    const today = new Date()
+        .toISOString()
+        .slice(0, 10)
+    // Take the latest observation from the provided JSON file
+    const EURtoCADRate = canadianDollarRates.observations[0].FXEURCAD.v
+    const canadianDollars = Intl.NumberFormat(
         "en-CA",
         {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-            hour12: false,
+            style: "currency",
+            currency: "CAD"
         }
-    ).formatToParts(
-        new Date()
-    )
-    // The parts are stored as [{type: "weekday", value: "Friday"}],
-    // so just find the part by its type, and take its value
-    const weekday = dateTimeParts.find(dateTime => {
-        return (dateTime.type === "weekday")
-    }).value
-    const day = dateTimeParts.find(dateTime => {
-        return (dateTime.type === "day")
-    }).value
-    const month = dateTimeParts.find(dateTime => {
-        return (dateTime.type === "month")
-    }).value
-    const year = dateTimeParts.find(dateTime => {
-        return (dateTime.type === "year")
-    }).value
+    )//
+    const euros = Intl.NumberFormat(
+        "fi-FI",
+        {
+            style: "currency",
+            currency: "EUR"
+        }
+    )//
 
-    return <div>
-        <main></main>
-        <footer>
-            <span className="date-time-container">
-                <span> {weekday} </span>
-                <span className="fat-number">
-                    {day}
-                </span>
-                <span> {month} </span>
-                <span> {year} </span>
-            </span>
-        </footer>
-    </div>
-} //
+    return <main>
+        <section>
+            <label htmlFor="amount-to-convert-input">
+                Amount
+            </label>
+            <input
+                type="number"
+                id="currency-to-convert-input"
+                min={0}
+                step={0.01}
+                value={amountToConvert}
+                onChange={(event) => {
+                    setAmountToConvert(Number(event.target.value))
+                }}
+            />
+            <fieldset>
+                <legend> Conversion direction </legend>
+                <input
+                    type="radio"
+                    id="eur-to-cad-input"
+                    name="conversion-direction"
+                    checked={EURtoCAD}
+                    onChange={() => toggleEURtoCAD(!EURtoCAD)}
+                />
+                <label htmlFor="eur-to-cad-input">
+                    € to $
+                </label>
+                <br />
+                <input
+                    type="radio"
+                    id="cad-to-eur-input"
+                    name="conversion-direction"
+                    checked={!EURtoCAD}
+                    onChange={() => {toggleEURtoCAD(!EURtoCAD)}}
+                />
+                <label htmlFor="cad-to-eur-input">
+                    $ to €
+                </label>
+            </fieldset>
+        </section>
+        <output>
+            <p>
+                Exchange rate at {today}
+            </p>
+            {(EURtoCAD)
+                ? <p>
+                    {euros.format(amountToConvert)} = {
+                        canadianDollars
+                            .format(amountToConvert * EURtoCADRate)
+                    }
+                </p>
+                : <p>
+                    {canadianDollars.format(amountToConvert)} = {
+                        euros
+                            .format(amountToConvert / EURtoCADRate)
+                    }
+                </p>
+            }
+            <cite>
+                Source: <a
+                    href={`https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json?start_date=${today}`}
+                >
+                    Bank of Canada, FX Rates Daily
+                </a>
+            </cite>
+        </output>
+    </main>
+}
 
 export default App
