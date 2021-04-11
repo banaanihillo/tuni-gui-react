@@ -5,9 +5,11 @@ import canadianDollarRates from "./FX_RATES_DAILY-sd-2021-04-09.json"
 const App = () => {
     const [EURtoCAD, toggleEURtoCAD] = useState(true)
     const [amountToConvert, setAmountToConvert] = useState(1.00)
-    const today = new Date()
+    // Take the "date" portion of today's date
+    // - also works past the year 10000
+    const dateAndTime = new Date()
         .toISOString()
-        .slice(0, 10)
+        .split("T")
     // Take the latest observation from the provided JSON file
     const EURtoCADRate = canadianDollarRates.observations[0].FXEURCAD.v
     const canadianDollars = Intl.NumberFormat(
@@ -67,7 +69,9 @@ const App = () => {
         </section>
         <output>
             <p>
-                Exchange rate at {today}
+                Exchange rate at {dateAndTime[0]},
+                <br />
+                {dateAndTime[1]}
             </p>
             {(EURtoCAD)
                 ? <p>
@@ -85,7 +89,7 @@ const App = () => {
             }
             <cite>
                 Source: <a
-                    href={`https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json?start_date=${today}`}
+                    href={`https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json?start_date=${dateAndTime[0]}`}
                 >
                     Bank of Canada, FX Rates Daily
                 </a>
