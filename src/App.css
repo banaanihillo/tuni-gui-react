@@ -13,23 +13,20 @@ input {
     background-color: violet;
 }
 
-a:link {
-    color: cyan;
-}
-
-a:visited {
-    color: plum;
+button {
+    width: 2em;
+    background-color: cyan;
+    border: 1px solid;
+    vertical-align: text-bottom;
 }
 
 label,
 fieldset,
-p,
+h1,
+h2,
 input,
-cite {
+button,
+output {
     margin: 1em;
 }
-
-legend {
-    margin-left: 1em;
-}
-/**/
+/* */

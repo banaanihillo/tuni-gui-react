@@ -1,100 +1,56 @@
 import React, {useState} from "react"
 import "./App.css"
-import canadianDollarRates from "./FX_RATES_DAILY-sd-2021-04-09.json"
+import texts from "./texts.json"
 
 const App = () => {
-    const [EURtoCAD, toggleEURtoCAD] = useState(true)
-    const [amountToConvert, setAmountToConvert] = useState(1.00)
-    // Take the "date" portion of today's date
-    // - also works past the year 10000
-    const dateAndTime = new Date()
-        .toISOString()
-        .split("T")
-    // Take the latest observation from the provided JSON file
-    const EURtoCADRate = canadianDollarRates.observations[0].FXEURCAD.v
-    const canadianDollars = Intl.NumberFormat(
-        "en-CA",
-        {
-            style: "currency",
-            currency: "CAD"
+    const [language, setLanguage] = useState("en-CA")
+    const [textToReverse, setTextToReverse] = useState("")
+    // If the specified language is available, use that one,
+    // and if not, fall back to English
+    const localeTexts = (texts.hasOwnProperty(language)
+        ? texts[language]
+        : texts["en-CA"]
+    )
+
+    const toggleLanguage = () => {
+        if (language === "en-CA") {
+            setLanguage("fi-FI")
+        } else {
+            setLanguage("en-CA")
         }
-    )//
-    const euros = Intl.NumberFormat(
-        "fi-FI",
-        {
-            style: "currency",
-            currency: "EUR"
-        }
-    )//
+    }//
 
     return <main>
-        <section>
-            <label htmlFor="amount-to-convert-input">
-                Amount
+        <button onClick={toggleLanguage}>
+            {(language === "en-CA")
+                ? "FI"
+                : "EN"
+            }
+        </button>
+        <h1>
+            {localeTexts.REVERSER}
+        </h1>
+        <div className="input-output-container">
+            <label htmlFor="reverser-input">
+                {localeTexts.INPUT}
             </label>
             <input
-                type="number"
-                id="currency-to-convert-input"
-                min={0}
-                step={0.01}
-                value={amountToConvert}
+                type="text"
+                id="reverser-input"
+                value={textToReverse}
                 onChange={(event) => {
-                    setAmountToConvert(Number(event.target.value))
+                    setTextToReverse(event.target.value)
                 }}
             />
-            <fieldset>
-                <legend> Conversion direction </legend>
-                <input
-                    type="radio"
-                    id="eur-to-cad-input"
-                    name="conversion-direction"
-                    checked={EURtoCAD}
-                    onChange={() => toggleEURtoCAD(!EURtoCAD)}
-                />
-                <label htmlFor="eur-to-cad-input">
-                    € to $
-                </label>
-                <br />
-                <input
-                    type="radio"
-                    id="cad-to-eur-input"
-                    name="conversion-direction"
-                    checked={!EURtoCAD}
-                    onChange={() => {toggleEURtoCAD(!EURtoCAD)}}
-                />
-                <label htmlFor="cad-to-eur-input">
-                    $ to €
-                </label>
-            </fieldset>
-        </section>
-        <output>
-            <p>
-                Exchange rate at {dateAndTime[0]},
-                <br />
-                {dateAndTime[1]}
-            </p>
-            {(EURtoCAD)
-                ? <p>
-                    {euros.format(amountToConvert)} = {
-                        canadianDollars
-                            .format(amountToConvert * EURtoCADRate)
-                    }
-                </p>
-                : <p>
-                    {canadianDollars.format(amountToConvert)} = {
-                        euros
-                            .format(amountToConvert / EURtoCADRate)
-                    }
-                </p>
-            }
-            <cite>
-                Source: <a
-                    href={`https://www.bankofcanada.ca/valet/observations/group/FX_RATES_DAILY/json?start_date=${dateAndTime[0]}`}
-                >
-                    Bank of Canada, FX Rates Daily
-                </a>
-            </cite>
-        </output>
+            <h2> {localeTexts.REVERSED} </h2>
+            <output>
+                {/* Convert the text into an array of characters,
+                    so it can be trivially reversed,
+                    then convert it back into a string
+                */}
+                {textToReverse.split("").reverse().join("")}
+            </output>
+        </div>
     </main>
 }
 
