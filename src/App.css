@@ -9,24 +9,25 @@ html {
     padding: 0;
 }
 
-input {
+input,
+select {
     background-color: violet;
 }
 
-button {
-    width: 2em;
-    background-color: cyan;
-    border: 1px solid;
-    vertical-align: text-bottom;
+canvas {
+    border: 1px solid cyan;
 }
 
 label,
-fieldset,
+figure,
 h1,
 h2,
 input,
 button,
-output {
-    margin: 1em;
+select,
+canvas {
+    margin: 1em auto;
+    text-align: center;
+    display: block;
 }
 /* */
