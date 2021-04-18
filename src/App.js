@@ -4,13 +4,7 @@ import fxRates from "./FX_RATES_DAILY-sd-2021-04-01.json"
 
 const App = () => {
     const [conversionTo, setConversionTo] = useState("EUR")
-    const [numberFormat, setNumberFormat] = useState(Intl.NumberFormat(
-        "en-CA",
-        {
-            style: "currency",
-            currency: conversionTo
-        }
-    ))
+
     const [canvasContext, setCanvasContext] = useState(null)
 
     // Take the observation in {"d": "YYYY-MM-DD"} format,
@@ -41,6 +35,8 @@ const App = () => {
     })
 
     useEffect(() => {
+        console.log(canvasContext)
+        // Initialize the chart headings (dates)
         if (!canvasContext) {
             let canvas = document.getElementById("currency-chart")
             let context = canvas.getContext("2d")
@@ -51,31 +47,43 @@ const App = () => {
                 context.measureText(observationDates[0])
             ).width
             for (let i = 0; i < observationDates.length; i++) {
+                // Start the text at x: 20,
+                // and the next one at ~90-100 pixels to the right
+                const startingPoint = 20 + (i * (textWidth + 20))
                 context.fillText(
                     observationDates[i],
-                    // Add some space before the first text,
-                    // and in between each text
-                    20 + (i * (textWidth + 20)),
+                    startingPoint,
                     10
                 )
+                context.lineTo(
+                    // Align the chart (left-to-right),
+                    // at the ~midpoint of the date headings
+                    startingPoint + 30,
+                    // Set the y coordinate at ~(20, 190),
+                    // since the canvas height is 200,
+                    // and the text takes ~10-20 of the height
+                    (Math.random() * 170 + 20)
+                )
+                context.stroke()
             }
             setCanvasContext(context)
+        } else {
+            // Use a local variable for the new number format,
+            // instead of a state variable,
+            // since the order of the operations needs to be respected,
+            // meaning,
+            // the number format depends on the conversionTo variable
+            let numberFormat = Intl.NumberFormat(
+                "en-CA",
+                {
+                    style: "currency",
+                    currency: conversionTo
+                }
+            )
+            console.log(numberFormat.format(1))
         }
     },
-    [canvasContext, observationDates])
-
-    useEffect(() => {
-        setNumberFormat(Intl.NumberFormat(
-            "en-CA",
-            {
-                style: "currency",
-                currency: conversionTo
-            }
-        ))
-    },
-    [conversionTo])
-
-    console.log(numberFormat.format(1))
+    [canvasContext, observationDates, conversionTo])
 
     return <main>
         <figure>
@@ -85,7 +93,7 @@ const App = () => {
                 // Use a static width,
                 // in order to line up the dates with the chart,
                 // without any additional hassle
-                width={800}
+                width={820}
                 height={200}
                 onMouseMove={(event) => {
                     // Hover over a certain point of the chart,
