@@ -8,7 +8,7 @@ const App = () => {
     const [canvasContext, setCanvasContext] = useState(null)
 
     // Take the observation in {"d": "YYYY-MM-DD"} format,
-    let canadianDollarRates = fxRates.observations
+    const rawCanadianDollarRates = fxRates.observations
         .map(observation => {
             return Object.entries(observation).map(([key, value]) => {
                 // and return the date by itself,
@@ -23,35 +23,33 @@ const App = () => {
                 }
             })
         })
-    const observationDates = canadianDollarRates.map((rate) => {
+    const dates = rawCanadianDollarRates.map((rate) => {
         // Take the date from [["date", {rates}, ..., {rates}]]
         return rate[0]
     })
-    canadianDollarRates = canadianDollarRates.map((ratesByDate) => {
-        return ratesByDate.filter((rate) => {
-            // Exclude the date that was already extracted
-            return (typeof rate !== "string")
+    const canadianDollarRates = rawCanadianDollarRates
+        .map((ratesByDate) => {
+            return ratesByDate.filter((rate) => {
+                // Exclude the date that was already extracted
+                return (typeof rate !== "string")
+            })
         })
-    })
 
     useEffect(() => {
-        console.log(canvasContext)
-        // Initialize the chart headings (dates)
+        // Initialize the chart headings
         if (!canvasContext) {
             let canvas = document.getElementById("currency-chart")
             let context = canvas.getContext("2d")
             context.fillStyle = "magenta"
             context.strokeStyle = "magenta"
             // All the texts are of the same width
-            const textWidth = (
-                context.measureText(observationDates[0])
-            ).width
-            for (let i = 0; i < observationDates.length; i++) {
+            const textWidth = (context.measureText(dates[0])).width
+            for (let i = 0; i < dates.length; i++) {
                 // Start the text at x: 20,
                 // and the next one at ~90-100 pixels to the right
                 const startingPoint = 20 + (i * (textWidth + 20))
                 context.fillText(
-                    observationDates[i],
+                    dates[i],
                     startingPoint,
                     10
                 )
@@ -59,15 +57,18 @@ const App = () => {
                     // Align the chart (left-to-right),
                     // at the ~midpoint of the date headings
                     startingPoint + 30,
-                    // Set the y coordinate at ~(20, 190),
+                    // Set the y coordinate at ~(20, 180),
                     // since the canvas height is 200,
-                    // and the text takes ~10-20 of the height
-                    (Math.random() * 170 + 20)
+                    // and the headings take ~10-20 from the top,
+                    // and the numbers take ~20 from the bottom
+                    (Math.random() * 160 + 20)
                 )
                 context.stroke()
             }
             setCanvasContext(context)
+        // Redraw the numbers whenever the currency is changed
         } else {
+            canvasContext.clearRect(0, 180, 820, 200)
             // Use a local variable for the new number format,
             // instead of a state variable,
             // since the order of the operations needs to be respected,
@@ -77,13 +78,38 @@ const App = () => {
                 "en-CA",
                 {
                     style: "currency",
-                    currency: conversionTo
+                    currency: conversionTo,
+                    minimumSignificantDigits: 4
                 }
             )
-            console.log(numberFormat.format(1))
+            const conversionRatesPerCurrency = canadianDollarRates
+                .map((rates) => {
+                    return rates.filter((rate) => {
+                        return (conversionTo in rate)
+                    })
+                // Flatten from [[{currency: amount}], ...],
+                // to [{currency: amount}, ...]
+                }).flat()
+            const textWidth = canvasContext.measureText(
+                conversionRatesPerCurrency[0]
+            ).width
+            for (
+                let index = 0;
+                index < conversionRatesPerCurrency.length;
+                index++
+            ) {
+                canvasContext.fillText(
+                    numberFormat.format(
+                        conversionRatesPerCurrency[index][conversionTo]
+                    ),
+                    // Non-scientific trial-and-error measurement
+                    index * (textWidth + 10) + 20,
+                    190
+                )
+            }
         }
     },
-    [canvasContext, observationDates, conversionTo])
+    [canvasContext, dates, conversionTo, canadianDollarRates])
 
     return <main>
         <figure>
@@ -95,11 +121,8 @@ const App = () => {
                 // without any additional hassle
                 width={820}
                 height={200}
-                onMouseMove={(event) => {
-                    // Hover over a certain point of the chart,
-                    // to bring up a tooltip of the exact rate
-                    console.log(event.clientX)
-                }}
+                // Use the simple chart "footers",
+                // instead of a mouse hover event
             ></canvas>
         </figure>
         <label htmlFor="currency-input"> Currency: </label>
