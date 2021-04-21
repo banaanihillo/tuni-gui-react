@@ -10,12 +10,19 @@ html {
 }
 
 input,
-select {
+select,
+button {
     background-color: violet;
+}
+
+button {
+    padding: 0.2em;
 }
 
 canvas {
     border: 1px solid cyan;
+    /* This was an inline style for some reason */
+    cursor: context-menu;
 }
 
 label,
