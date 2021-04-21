@@ -1,9 +1,9 @@
-import React from "react"
+import React, {useState} from "react"
 import "./App.css"
 import PieChart from "./PieChart"
 
 const App = () => {
-    const data = [
+    const [data, setData] = useState([
         {
             name: "Thing",
             value: 54
@@ -12,9 +12,10 @@ const App = () => {
             name: "anotherThing",
             value: 99
         }
-    ]
+    ])
+
     return <main>
-        <PieChart data={data} />
+        <PieChart data={data} setData={setData} />
     </main>
 }
 

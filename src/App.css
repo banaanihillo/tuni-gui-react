@@ -16,11 +16,13 @@ button {
 }
 
 button {
-    padding: 0.2em;
+    padding: 0.4em;
 }
 
 canvas {
     border: 1px solid cyan;
+    display: block;
+    margin: 1em auto;
     /* This was an inline style for some reason */
     cursor: context-menu;
 }
@@ -31,10 +33,35 @@ h1,
 h2,
 input,
 button,
-select,
-canvas {
-    margin: 1em auto;
-    text-align: center;
-    display: block;
+select {
+    margin: 1em;
+}
+
+.options-container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-evenly;
+}
+
+.input-container {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.button-container {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+
+form button {
+    align-self: center;
 }
 /* */
