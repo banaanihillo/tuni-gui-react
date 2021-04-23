@@ -15,6 +15,38 @@ button {
     background-color: violet;
 }
 
+.background-secondary {
+    background-color: black;
+    color: violet;
+}
+
+.font-secondary {
+    font-family: cursive;
+}
+
+/*
+Make the main content take the whole viewport height,
+so the menu can be closed by clicking on anywhere,
+similar to the default browser behavior
+*/
+main {
+    height: 100vh;
+}
+
+nav {
+    /* The context menu is closed by default */
+    display: none;
+    /* Make it possible to open the menu at the mouse position, */
+    position: absolute;
+    /* and make sure the menu stays on top of existing elements */
+    z-index: 9001;
+    background-color: #222222;
+}
+
+nav li {
+    list-style: none;
+}
+
 button {
     padding: 0.4em;
 }
