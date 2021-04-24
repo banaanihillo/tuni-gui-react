@@ -24,31 +24,41 @@ button {
     font-family: cursive;
 }
 
-/*
-Make the main content take the whole viewport height,
-so the menu can be closed by clicking on anywhere,
-similar to the default browser behavior
-*/
+input {
+    padding: 0.2em;
+    margin: 0.4em 0;
+}
+
 main {
-    height: 100vh;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
 }
 
-nav {
-    /* The context menu is closed by default */
-    display: none;
-    /* Make it possible to open the menu at the mouse position, */
-    position: absolute;
-    /* and make sure the menu stays on top of existing elements */
-    z-index: 9001;
-    background-color: #222222;
+label {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: baseline;
+    justify-content: center;
 }
 
-nav li {
-    list-style: none;
+label * {
+    width: 25%;
+}
+
+form,
+output {
+    text-align: center;
+}
+
+output {
+    width: 50vw;
 }
 
 button {
     padding: 0.4em;
+    width: 5em;
+    align-self: center;
 }
 
 canvas {
@@ -59,12 +69,13 @@ canvas {
     cursor: context-menu;
 }
 
-label,
-figure,
-h1,
-h2,
-input,
+li {
+    list-style: none;
+}
+
 button,
+h2,
+h1,
 select {
     margin: 1em;
 }
@@ -90,10 +101,12 @@ select {
 form {
     display: flex;
     flex-flow: column nowrap;
-    justify-content: center;
+    width: 50vw;
+    top: 0;
+    /* Keep the form visible while scrolling the output */
+    position: sticky;
+    z-index: 9001;
+    background-color: black;
+    padding-bottom: 2em;
 }
-
-form button {
-    align-self: center;
-}
-/* */
+/**/

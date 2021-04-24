@@ -1,148 +1,134 @@
-import React, {useState, useRef} from "react"
+import React, {useState} from "react"
 import "./App.css"
 
 
 const App = () => {
-    const [menuOpen, setMenuOpen] = useState(false)
-    let menuReference = useRef(null)
-    let inputReference = useRef(null)
-    let colorToggleReference = useRef(null)
-    let fontSwitchReference = useRef(null)
+    const [prime, setPrime] = useState(null)
+    const [primes, setPrimes] = useState([])
+    const [primesFrom, setPrimesFrom] = useState(3)
+    const [primesTo, setPrimesTo] = useState(5)
 
-    const toggleColor = (classList) => {
-        if (classList.contains("background-secondary")) {
-            classList.remove("background-secondary")
-        } else {
-            classList.add("background-secondary")
+    const findPrimes = () => {
+        setPrimes([])
+        setPrime(null)
+        // Do nothing on incorrect input
+        if (primesFrom > primesTo) {
+            return
         }
-    }
-
-    const toggleFont = (classList) => {
-        if (classList.contains("font-secondary")) {
-            classList.remove("font-secondary")
-        } else {
-            classList.add("font-secondary")
-        }
-    }
-
-    const closeMenu = () => {
-        menuReference.current.style.display = "none"
-        setMenuOpen(false)
-    }
-
-    const openMenu = (event) => {
-        if (!menuOpen) {
-            setMenuOpen(true)
-            menuReference.current.style.display = "unset"
-        }
-        // Absolutely position the menu depending on cursor position
-        menuReference.current.style.left = `${event.clientX}px`
-        menuReference.current.style.top = `${event.clientY}px`
-        // Allow the menu to be navigated via keyboard
-        colorToggleReference.current.focus()
-    }
-
-    return <><main
-        // Close the custom context menu by clicking on anywhere else
-        onClick={() => {
-            closeMenu()
-        }}
-        // Also close the custom context menu,
-        // if the user opens a browser default context menu elsewhere
-        onContextMenu={() => {
-            if (menuOpen) {
-                closeMenu()
-            }
-        }}
-    >
-        <label htmlFor="mysterious-input">
-            Context menu
-        </label>
-        <input
-            type="text"
-            id="mysterious-input"
-            ref={inputReference}
-            onContextMenu={(event) => {
-                event.preventDefault()
-                // If the custom context menu is open,
-                // and the user opens the custom context menu again,
-                // (while still inside the input element),
-                // prevent the firing of the parent element event,
-                // which would close the custom context menu,
-                // instead of opening it at a different position
-                event.stopPropagation()
-                openMenu(event)
-            }}
-        />
-    </main>
-    <nav
-        ref={menuReference}
-        onKeyDown={(event) => {
-            switch (event.code) {
-                // Esc should close the custom context menu,
-                // just as the browser default does,
-                // and bring the input element back to focus
-                case "Escape":
-                    closeMenu()
-                    inputReference.current.focus()
-                    break
-                // The menu happens to only have two items,
-                // so navigation upward/downward is the same thing
-                case "ArrowUp":
-                case "ArrowDown":
+        let primeFinder = new Worker("primesFinder.js")
+        primeFinder.postMessage({
+            primesFrom,
+            primesTo
+        })
+        // lowercase m? really?
+        primeFinder.onmessage = (message) => {
+            // Once the execution is complete,
+            // store all the primes in state
+            if (message.data.primes) {
+                // If there's just one prime,
+                // skip all the hassle,
+                // and just handle it like a single prime
+                if (message.data.primes.length === 1) {
+                    // Make sure there's no funky business,
+                    // such as (primesFrom=6, primesTo=6) returning 7
                     if (
-                        document.activeElement.id
-                        === colorToggleReference.current.id
+                        message.data.primes[0] === primesFrom
+                        || message.data.primes[0] === primesTo
                     ) {
-                        fontSwitchReference.current.focus()
-                    } else {
-                        colorToggleReference.current.focus()
+                        setPrime(message.data.primes[0])
                     }
-                    break
-                // Navigation via Tab and Shift+Tab already works,
-                // because the elements are clickable buttons
-                default:
                     return
+                }
+                // Handle the off-by-one error,
+                // due to the prime >= primesTo comparison,
+                // returning the original message primes,
+                // if the primesTo parameter itself is prime,
+                if (
+                    message.data.primes[message.data.primes.length - 1]
+                    === primesTo
+                ) {
+                    setPrimes(message.data.primes)
+                } else {
+                    // and if the primesTo parameter is not a prime,
+                    // fix the extra prime after the fact
+                    setPrimes(
+                        message.data.primes.slice(
+                            0,
+                            message.data.primes.length - 1
+                        )
+                    )
+                }
+                return
             }
-        }}
-    >
-        <ul onContextMenu={(event) => {
-            // If the custom context menu is already open,
-            // prevent opening a browser default menu on top of it,
-            // as that would probably complicate things further
+            if (message.data.prime >= primesTo) {
+                // Once the last prime is found,
+                // tell the worker to stop
+                primeFinder.postMessage({
+                    stop: true
+                })
+                return
+            }
+            if (message.data.prime) {
+                // Receive an individual prime,
+                // while the worker is still running
+                setPrime(message.data.prime)
+                return
+            }
+        } //
+    }
+
+    return <main>
+        <form onSubmit={(event) => {
             event.preventDefault()
+            findPrimes()
         }}>
-            <li>
-                <button
-                    ref={colorToggleReference}
-                    id="toggle-color"
-                    onClick={() => {
-                        toggleColor(inputReference.current.classList)
-                        // Close the custom context menu,
-                        // and re-focus the input element,
-                        // after an option has been clicked
-                        closeMenu()
-                        inputReference.current.focus()
+            <header> Prime numbers </header>
+            <label>
+                <span> From </span>
+                <input
+                    type="number"
+                    value={primesFrom}
+                    min={3}
+                    max={9001}
+                    onChange={(event) => {
+                        setPrimesFrom(Number(event.target.value))
                     }}
-                >
-                    Invert colors
-                </button>
-            </li>
-            <li>
-                <button
-                    ref={fontSwitchReference}
-                    id="switch-font"
-                    onClick={() => {
-                        toggleFont(inputReference.current.classList)
-                        closeMenu()
-                        inputReference.current.focus()
+                />
+            </label>
+            <label>
+                <span> To </span>
+                <input
+                    type="number"
+                    value={primesTo}
+                    min={5}
+                    max={99999}
+                    onChange={(event) => {
+                        setPrimesTo(Number(event.target.value))
                     }}
-                >
-                    Switch font
-                </button>
-            </li>
-        </ul>
-    </nav></>
+                />
+            </label>
+            <button type="submit">
+                Find
+            </button>
+        </form>
+        <output>
+            {(primes.length > 1)
+                ? <ul>
+                    {primes.map((prime, index) => {
+                        return <li key={index}>
+                            {prime}
+                        </li>
+                    })}
+                </ul>
+                : <p>
+                    {(prime)
+                        ? prime
+                        : "Click on Find to find primes"
+                    }
+                </p>
+            }
+        </output>
+    </main> //
 }
 
 export default App
